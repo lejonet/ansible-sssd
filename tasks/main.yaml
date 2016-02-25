@@ -1,8 +1,4 @@
 ---
-
-- name: Test distribution
-
-
 - name: Install sssd package for RedHat
   yum:
     name: "{{ sssd_pkg }}"
