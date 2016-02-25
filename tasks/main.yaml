@@ -1,9 +1,7 @@
 ---
 
 - name: Test distribution
-  assert:
-    that: >
-      ansible_os_family == "RedHat"
+
 
 - name: Install sssd package for RedHat
   yum:
@@ -13,6 +11,19 @@
     - Restart sssd
   tags:
     - sssd_pkg
+  when:
+    ansible_os_family == 'RedHat'
+
+- name: Install ssd package for Gentoo
+  portage:
+    name: "{{ sssd_pkg }}"
+    state: present
+  notify:
+    - Restart sssd
+  tags:
+    - sssd_pkg
+  when:
+    ansible_os_family == 'Gentoo'
 
 - name: Configure sssd service
   template:
