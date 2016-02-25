@@ -1,12 +1,6 @@
 ---
-
-- name: Test distribution
-  assert:
-    that: >
-      ansible_os_family == "RedHat"
-
-- name: Install sssd package for RedHat
-  yum:
+- name: Install sssd package
+  package:
     name: "{{ sssd_pkg }}"
     state: present
   notify:
