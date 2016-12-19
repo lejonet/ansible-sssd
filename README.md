@@ -67,4 +67,4 @@ MIT
 Author
 ------
 
-Jiri Tyr
+Jiri Tyr, adapted to runit by Daniel Kuehn
