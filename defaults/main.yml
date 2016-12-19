@@ -1,5 +1,4 @@
 ---
-
 # Package to be installed (you can force a specific version here)
 sssd_pkg: sssd
 
@@ -16,3 +15,7 @@ sssd_config:
     id_provider: local
     auth_provider: local
     access_provider: permit
+
+# Runit isn't supported by the service module and has to be handled
+# seperately
+sssd_service_runit: false
