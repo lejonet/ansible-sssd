@@ -1,0 +1,16 @@
+---
+- name: Make sure sssd service is running
+  runit:
+    name: sssd
+    state: started
+  register: sssd_service_started
+  tags:
+    - sssd_config
+    - sssd_pkg
+      
+- name: Make sure sssd service is enabled
+  runit:
+    name: sssd
+    enabled: yes
+  tags:
+    - sssd_config
