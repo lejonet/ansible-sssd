@@ -19,3 +19,4 @@ sssd_config:
 # Runit isn't supported by the service module and has to be handled
 # seperately
 sssd_service_runit: false
+svdir: "/var/services"
