@@ -3,7 +3,7 @@
   runit:
     name: sssd
     state: started
-  environment: "{{ svdir }}"
+  environment: "{{ runit_env }}"
   register: sssd_service_started
   tags:
     - sssd_config
@@ -13,6 +13,6 @@
   runit:
     name: sssd
     enabled: yes
-  environment: "{{ svdir }}"
+  environment: "{{ runit_env }}"
   tags:
     - sssd_config
