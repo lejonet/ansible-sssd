@@ -40,7 +40,7 @@ options:
   state:
     description:
       - The state of service
-    required: true
+    required: false
     default: null
     choices: [ "started", "stopped", "restarted" ]
   timeout:
@@ -84,7 +84,7 @@ EXAMPLES = '''
 def main():
     arg_spec = dict(
         name       = dict(required=True),
-        state      = dict(required=True, choices=['started', 'restarted', 'stopped']),
+        state      = dict(required=False, choices=['started', 'restarted', 'stopped']),
         force      = dict(required=False),
         enabled    = dict(required=False, type='bool'),
         timeout    = dict(required=False, default='7'),
