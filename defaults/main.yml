@@ -20,4 +20,4 @@ sssd_config:
 # seperately
 sssd_service_runit: false
 runit_env:
-  svdir: "/var/services"
+  SVDIR: /var/services/
