@@ -7,6 +7,11 @@
   tags:
     - sssd_config
 
+- name: Give runsv some time to start sssd
+  wait_for: path=/var/lib/sss/pipes/private/sbus-monitor state=present timeout=5
+  tags:
+    - sssd_config
+
 - name: Make sure sssd service is running
   runit:
     name: sssd
