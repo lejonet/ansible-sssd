@@ -1,4 +1,12 @@
 ---
+- name: Make sure sssd service is enabled
+  runit:
+    name: sssd
+    enabled: yes
+  environment: "{{ runit_env }}"
+  tags:
+    - sssd_config
+
 - name: Make sure sssd service is running
   runit:
     name: sssd
@@ -8,11 +16,3 @@
   tags:
     - sssd_config
     - sssd_pkg
-      
-- name: Make sure sssd service is enabled
-  runit:
-    name: sssd
-    enabled: yes
-  environment: "{{ runit_env }}"
-  tags:
-    - sssd_config
