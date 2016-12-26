@@ -16,8 +16,6 @@ sssd_config:
     auth_provider: local
     access_provider: permit
 
-# Runit isn't supported by the service module and has to be handled
-# seperately
-sssd_service_runit: false
-runit_env:
+# Needed by runits sv to find the services
+service_env:
   SVDIR: /var/services/

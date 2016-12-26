@@ -1,7 +1,7 @@
 ---
-
 - name: Restart sssd
   service:
     name: sssd
     state: restarted
+  environment: "{{ service_env }}"
   when: not sssd_service_started.changed and not sssd_service_runit

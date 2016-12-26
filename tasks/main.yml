@@ -20,8 +20,25 @@
   tags:
     - sssd_config
 
-- include: service_module.yml
-  when: not sssd_service_runit
+- name: Make sure sssd service is enabled
+  service:
+    name: sssd
+    enabled: yes
+  environment: "{{ service_env }}"
+  tags:
+    - sssd_config
 
-- include: runit_module.yml
-  when: sssd_service_runit
+- name: Give service module some time to start services
+  wait_for: path=/var/lib/sss/pipes/private/sbus-monitor state=present timeout=5
+  tags:
+    - sssd_config
+
+- name: Make sure sssd service is running
+  service:
+    name: sssd
+    state: started
+  environment: "{{ service_env }}"
+  register: sssd_service_started
+  tags:
+    - sssd_config
+    - sssd_pkg
