@@ -68,6 +68,16 @@ options:
       - Forces the creation of the symlink, even if the target file/link exists
     required: false
     default: null
+  logging:
+    description:
+      - Creates directory for storing logs of the service
+    required: false
+    default: true
+  log_dir:
+    description:
+      - The base path that the log directory will be created, the log directory will be named after the service
+    required: false
+    default: /var/log/services/
 requirements: [ ]
 version_added: 1.6
 author: Daniel Kuehn
@@ -83,13 +93,15 @@ EXAMPLES = '''
 
 def main():
     arg_spec = dict(
-        name       = dict(required=True),
-        state      = dict(required=False, choices=['started', 'restarted', 'stopped']),
-        force      = dict(required=False),
-        enabled    = dict(required=False, type='bool'),
-        timeout    = dict(required=False, default='7'),
-        service_dir= dict(required=False, default='/etc/runit/runsvdir/current'),
-        source_dir = dict(required=False, default='/etc/runit/runsvdir/all'),
+        name        = dict(required=True),
+        state       = dict(required=False, choices=['started', 'restarted', 'stopped']),
+        force       = dict(required=False),
+        enabled     = dict(required=False, type='bool'),
+        timeout     = dict(required=False, default='7'),
+        service_dir = dict(required=False, default='/etc/runit/runsvdir/current'),
+        source_dir  = dict(required=False, default='/etc/runit/runsvdir/all'),
+        logging     = dict(required=False, type='bool', default=True),
+        log_dir     = dict(required=False, default='/var/log/services'),
     )
 
     module = AnsibleModule(argument_spec=arg_spec, supports_check_mode=True)
@@ -99,6 +111,9 @@ def main():
     timeout = module.params['timeout']
     enabled = module.params['enabled']
     force   = module.params['force']
+
+    logging = module.params['logging']
+    log_dir = module.params['log_dir']
 
     if state and enabled:
         module.fail_json(msg='state and enabled cannot be used at the same time', state=state, enabled=enabled)
@@ -170,12 +185,21 @@ def main():
             module.run_command('%s -s %s/%s %s/%s' % (LN, source_dir, name, service_dir, name), check_rc=True)
             changed = True
 
+        if not os.path.exists('%s/%s' % (log_dir, name)):
+            MKDIR = module.get_bin_path('mkdir', True)
+            module.run_command('%s %s/%s' % (MKDIR, log_dir, name))
+            changed = True
+
         module.exit_json(changed=changed, name=name, enabled=enabled)
     elif enabled == False:
         RM = module.get_bin_path('rm', True)
 
         if os.path.exists('%s/%s' % (service_dir, name)):
             module.run_command('%s %s/%s' % (RM, service_dir, name), check_rc=True)
+            changed = True
+
+        if os.path.exists('%s/%s' % (log_dir, name)):
+            module.run_command('%s %s/%s' % (RM, log_dir, name), check_rc=True)
             changed = True
 
         module.exit_json(changed=changed, name=name, enabled=enabled)
